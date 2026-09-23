@@ -85,4 +85,26 @@ public class Platform
     {
         this.stAtivo = stAtivo;
     }
+
+    public String getStAcesso()
+    {
+        if ( dtUltimoAcesso == null )
+        {
+            return "NUNCA";
+        }
+
+        LocalDateTime agora = LocalDateTime.now();
+
+        if ( !dtUltimoAcesso.toLocalDate().isBefore( agora.toLocalDate() ) )
+        {
+            return "HOJE";
+        }
+
+        if ( !dtUltimoAcesso.isBefore( agora.minusWeeks( 1 ) ) )
+        {
+            return "SEMANA";
+        }
+
+        return "ANTIGO";
+    }
 }
