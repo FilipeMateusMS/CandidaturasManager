@@ -1,6 +1,12 @@
 package com.candidaturasmanager.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,15 +31,58 @@ public class Platform
     @Column( nullable = false )
     private Boolean stAtivo = true;
 
-    public Long getCdPlatform() { return cdPlatform; }
-    public String getNmPlatform() { return nmPlatform; }
-    public void setNmPlatform( String nmPlatform ) { this.nmPlatform = nmPlatform; }
-    public String getDsPlatform() { return dsPlatform; }
-    public void setDsPlatform( String dsPlatform ) { this.dsPlatform = dsPlatform; }
-    public String getDsUrl() { return dsUrl; }
-    public void setDsUrl( String dsUrl ) { this.dsUrl = dsUrl; }
-    public LocalDateTime getDtUltimoAcesso() { return dtUltimoAcesso; }
-    public void setDtUltimoAcesso( LocalDateTime dtUltimoAcesso ) { this.dtUltimoAcesso = dtUltimoAcesso; }
-    public Boolean getStAtivo() { return stAtivo; }
-    public void setStAtivo( Boolean stAtivo ) { this.stAtivo = stAtivo; }
+    public Long getCdPlatform()
+    {
+        return cdPlatform;
+    }
+
+    public String getNmPlatform()
+    {
+        return nmPlatform;
+    }
+
+    public void setNmPlatform( String nmPlatform )
+    {
+        this.nmPlatform = nmPlatform;
+    }
+
+    public String getDsPlatform()
+    {
+        return dsPlatform;
+    }
+
+    public void setDsPlatform( String dsPlatform )
+    {
+        this.dsPlatform = dsPlatform;
+    }
+
+    public String getDsUrl()
+    {
+        return dsUrl;
+    }
+
+    public void setDsUrl( String dsUrl )
+    {
+        this.dsUrl = dsUrl;
+    }
+
+    public LocalDateTime getDtUltimoAcesso()
+    {
+        return dtUltimoAcesso;
+    }
+
+    public void setDtUltimoAcesso( LocalDateTime dtUltimoAcesso )
+    {
+        this.dtUltimoAcesso = dtUltimoAcesso;
+    }
+
+    public Boolean getStAtivo()
+    {
+        return stAtivo;
+    }
+
+    public void setStAtivo( Boolean stAtivo )
+    {
+        this.stAtivo = stAtivo;
+    }
 }
