@@ -49,13 +49,31 @@
                             <small class="text-secondary text-break" th:text="${plataforma.dsUrl}"></small>
                         </td>
 
-                        <td class="text-secondary" th:text="${plataforma.dsPlatform ?: '-'}"></td>
+                        <td class="text-secondary">
+                            <span th:if="${plataforma.dsPlatform == null}">-</span>
+                            <span th:unless="${plataforma.dsPlatform == null}"
+                                  th:text="${#strings.length(plataforma.dsPlatform) > 50 ? #strings.substring(plataforma.dsPlatform, 0, 50) + '...' : plataforma.dsPlatform}">
+                            </span>
+                        </td>
 
                         <td>
-                            <span th:if="${plataforma.dtUltimoAcesso == null}" class="text-secondary">
+                            <span class="badge bg-dark"
+                                  th:if="${plataforma.stAcesso == 'NUNCA'}">
                                 Nunca acessou
                             </span>
-                            <span th:unless="${plataforma.dtUltimoAcesso == null}"
+
+                            <span class="badge bg-success"
+                                  th:if="${plataforma.stAcesso == 'HOJE'}"
+                                  th:text="${#temporals.format(plataforma.dtUltimoAcesso, 'dd/MM/yyyy HH:mm')}">
+                            </span>
+
+                            <span class="badge bg-warning text-dark"
+                                  th:if="${plataforma.stAcesso == 'SEMANA'}"
+                                  th:text="${#temporals.format(plataforma.dtUltimoAcesso, 'dd/MM/yyyy HH:mm')}">
+                            </span>
+
+                            <span class="badge bg-danger"
+                                  th:if="${plataforma.stAcesso == 'ANTIGO'}"
                                   th:text="${#temporals.format(plataforma.dtUltimoAcesso, 'dd/MM/yyyy HH:mm')}">
                             </span>
                         </td>
@@ -65,14 +83,8 @@
                                 <form th:action="@{/acessar/{id}(id=${plataforma.cdPlatform})}"
                                       method="post"
                                       target="_blank">
-                                    <button type="submit"
-                                            class="btn btn-sm acesso-btn"
-                                            th:classappend="' acesso-' + ${plataforma.stAcesso}">
-                                        <span class="d-block fw-semibold">Acessar</span>
-                                        <small th:if="${plataforma.dtUltimoAcesso == null}">Nunca acessou</small>
-                                        <small th:unless="${plataforma.dtUltimoAcesso == null}"
-                                               th:text="${#temporals.format(plataforma.dtUltimoAcesso, 'dd/MM/yyyy HH:mm')}">
-                                        </small>
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        Acessar
                                     </button>
                                 </form>
 
@@ -115,11 +127,21 @@
                         <td class="text-secondary" th:text="${plataforma.dsUrl}"></td>
 
                         <td class="text-end pe-4">
-                            <form th:action="@{/toggle/{id}(id=${plataforma.cdPlatform})}" method="post">
-                                <button class="btn btn-outline-success btn-sm" type="submit">
-                                    Ativar
-                                </button>
-                            </form>
+                            <div class="d-flex justify-content-end gap-2">
+                                <form th:action="@{/toggle/{id}(id=${plataforma.cdPlatform})}" method="post">
+                                    <button class="btn btn-outline-success btn-sm" type="submit">
+                                        Ativar
+                                    </button>
+                                </form>
+
+                                <form th:action="@{/deletar/{id}(id=${plataforma.cdPlatform})}"
+                                      method="post"
+                                      onsubmit="return confirm('Deseja realmente deletar esta plataforma?');">
+                                    <button class="btn btn-outline-danger btn-sm" type="submit">
+                                        Deletar
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     </tbody>
