@@ -9,6 +9,9 @@ import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,6 +46,17 @@ public class PlatformController
         model.addAttribute( "modoEdicao", false );
 
         return "form";
+    }
+
+    @GetMapping( "/exportar-csv" )
+    public ResponseEntity<byte[]> exportarCsv()
+    {
+        byte[] arquivo = service.exportarCsv();
+
+        return ResponseEntity.ok()
+            .header( HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=plataformas.csv" )
+            .contentType( MediaType.parseMediaType( "text/csv; charset=UTF-8" ) )
+            .body( arquivo );
     }
 
     @GetMapping( "/importar" )
