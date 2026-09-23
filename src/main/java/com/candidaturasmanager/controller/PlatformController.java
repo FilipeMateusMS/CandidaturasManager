@@ -184,6 +184,17 @@ public class PlatformController
         return "redirect:/";
     }
 
+    @PostMapping( "/deletar/{cdPlatform}" )
+    public String deletar(
+        @PathVariable Long cdPlatform,
+        RedirectAttributes redirectAttributes )
+    {
+        service.deletar( cdPlatform );
+        redirectAttributes.addFlashAttribute( "sucesso", "Plataforma removida com sucesso." );
+
+        return "redirect:/";
+    }
+
     @PostMapping( "/acessar/{cdPlatform}" )
     public String acessar( @PathVariable Long cdPlatform )
     {
