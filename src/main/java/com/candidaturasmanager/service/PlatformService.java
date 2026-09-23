@@ -92,6 +92,22 @@ public class PlatformService
     }
 
     @Transactional
+    public void deletar( Long cdPlatform )
+    {
+        Platform platform = buscarPorId( cdPlatform );
+
+        if ( platform.getStAtivo() )
+        {
+            throw new PlatformValidationException(
+                "stAtivo",
+                "Somente plataformas desativadas podem ser removidas."
+            );
+        }
+
+        repository.delete( platform );
+    }
+
+    @Transactional
     public Platform acessar( Long cdPlatform )
     {
         Platform platform = buscarPorId( cdPlatform );
