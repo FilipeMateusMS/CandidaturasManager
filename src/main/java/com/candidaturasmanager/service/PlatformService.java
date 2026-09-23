@@ -129,6 +129,7 @@ public class PlatformService
     public byte[] exportarCsv()
     {
         CSVFormat formato = CSVFormat.DEFAULT.builder()
+            .setDelimiter( ';' )
             .setHeader( "nome", "descricao", "url" )
             .build();
 
