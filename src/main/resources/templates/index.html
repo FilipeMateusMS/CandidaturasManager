@@ -83,7 +83,8 @@
                             <div class="d-flex justify-content-end flex-wrap gap-2">
                                 <form th:action="@{/acessar/{id}(id=${plataforma.cdPlatform})}"
                                       method="post"
-                                      target="_blank">
+                                      target="_blank"
+                                      onsubmit="setTimeout(() => window.location.reload(), 300);">
                                     <button type="submit" class="btn btn-success btn-sm">
                                         Acessar
                                     </button>
