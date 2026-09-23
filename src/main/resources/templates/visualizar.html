@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Visualizar plataforma')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Visualizar plataforma</h1>
+            <p class="text-secondary mb-0">Detalhes da plataforma cadastrada.</p>
+        </div>
+
+        <a class="btn btn-outline-secondary" th:href="@{/}">Voltar</a>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            <div class="mb-4">
+                <h2 class="h4 mb-1" th:text="\${plataforma.nmPlatform}"></h2>
+                <span class="badge text-bg-success" th:if="\${plataforma.stAtivo}">Ativa</span>
+                <span class="badge text-bg-secondary" th:unless="\${plataforma.stAtivo}">Desativada</span>
+            </div>
+
+            <dl class="row mb-4">
+                <dt class="col-sm-3">Descrição</dt>
+                <dd class="col-sm-9" th:text="\${plataforma.dsPlatform ?: '-'}"></dd>
+
+                <dt class="col-sm-3">URL</dt>
+                <dd class="col-sm-9">
+                    <a th:href="\${plataforma.dsUrl}" target="_blank" rel="noopener noreferrer"
+                       th:text="\${plataforma.dsUrl}"></a>
+                </dd>
+
+                <dt class="col-sm-3">Último acesso</dt>
+                <dd class="col-sm-9">
+                    <span th:if="\${plataforma.dtUltimoAcesso == null}">Nunca acessou</span>
+                    <span th:unless="\${plataforma.dtUltimoAcesso == null}"
+                          th:text="\${#temporals.format(plataforma.dtUltimoAcesso, 'dd/MM/yyyy HH:mm')}">
+                    </span>
+                </dd>
+            </dl>
+
+            <div class="d-flex flex-wrap gap-2">
+                <form th:if="\${plataforma.stAtivo}"
+                      th:action="@{/acessar/{id}(id=\${plataforma.cdPlatform})}"
+                      method="post"
+                      target="_blank">
+                    <button class="btn btn-success" type="submit">Acessar plataforma</button>
+                </form>
+
+                <a class="btn btn-outline-primary"
+                   th:href="@{/editar/{id}(id=\${plataforma.cdPlatform})}">
+                    Editar
+                </a>
+
+                <form th:action="@{/toggle/{id}(id=\${plataforma.cdPlatform})}" method="post">
+                    <button class="btn btn-outline-secondary" type="submit"
+                            th:text="\${plataforma.stAtivo} ? 'Desativar' : 'Ativar'">
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
