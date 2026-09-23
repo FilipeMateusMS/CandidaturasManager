@@ -18,6 +18,7 @@
 
         <div class="d-flex align-items-center gap-3">
             <span class="badge text-bg-success" th:text="${#lists.size(plataformas)} + ' ativas'"></span>
+            <a class="btn btn-outline-success" th:href="@{/importar}">Importar CSV</a>
             <a class="btn btn-success" th:href="@{/novo}">Nova plataforma</a>
         </div>
     </div>
