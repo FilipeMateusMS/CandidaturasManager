@@ -154,11 +154,10 @@ public class PlatformController
     }
 
     @PostMapping( "/acessar/{cdPlatform}" )
-    public String acessar( @PathVariable Long cdPlatform, Model model )
+    public String acessar( @PathVariable Long cdPlatform )
     {
         Platform platform = service.acessar( cdPlatform );
-        model.addAttribute( "url", platform.getDsUrl() );
 
-        return "access-redirect";
+        return "redirect:" + platform.getDsUrl();
     }
 }
