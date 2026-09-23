@@ -2,6 +2,7 @@ package com.candidaturasmanager.controller;
 
 import com.candidaturasmanager.dto.PlatformRequest;
 import com.candidaturasmanager.entity.Platform;
+import com.candidaturasmanager.exception.PlatformValidationException;
 import com.candidaturasmanager.service.PlatformService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,7 @@ public class PlatformController
     {
         model.addAttribute( "plataformas", service.listarAtivas() );
         model.addAttribute( "inativas", service.listarInativas() );
+
         return "index";
     }
 
@@ -36,6 +38,7 @@ public class PlatformController
     {
         model.addAttribute( "platformRequest", new PlatformRequest() );
         model.addAttribute( "modoEdicao", false );
+
         return "form";
     }
 
@@ -49,10 +52,27 @@ public class PlatformController
         if ( bindingResult.hasErrors() )
         {
             model.addAttribute( "modoEdicao", false );
+
             return "form";
         }
 
-        service.salvar( request );
+        try
+        {
+            service.salvar( request );
+        }
+        catch ( PlatformValidationException exception )
+        {
+            bindingResult.rejectValue(
+                exception.getField(),
+                null,
+                exception.getMessage()
+            );
+
+            model.addAttribute( "modoEdicao", false );
+
+            return "form";
+        }
+
         redirectAttributes.addFlashAttribute( "sucesso", "Plataforma cadastrada com sucesso." );
 
         return "redirect:/";
@@ -87,20 +107,41 @@ public class PlatformController
         {
             model.addAttribute( "modoEdicao", true );
             model.addAttribute( "cdPlatform", cdPlatform );
+
             return "form";
         }
 
-        service.editar( cdPlatform, request );
+        try
+        {
+            service.editar( cdPlatform, request );
+        }
+        catch ( PlatformValidationException exception )
+        {
+            bindingResult.rejectValue(
+                exception.getField(),
+                null,
+                exception.getMessage()
+            );
+
+            model.addAttribute( "modoEdicao", true );
+            model.addAttribute( "cdPlatform", cdPlatform );
+
+            return "form";
+        }
+
         redirectAttributes.addFlashAttribute( "sucesso", "Plataforma atualizada com sucesso." );
 
         return "redirect:/";
     }
 
     @PostMapping( "/toggle/{cdPlatform}" )
-    public String alternarStatus( @PathVariable Long cdPlatform, RedirectAttributes redirectAttributes )
+    public String alternarStatus(
+        @PathVariable Long cdPlatform,
+        RedirectAttributes redirectAttributes )
     {
         service.alternarStatus( cdPlatform );
         redirectAttributes.addFlashAttribute( "sucesso", "Status da plataforma atualizado com sucesso." );
+
         return "redirect:/";
     }
 
@@ -108,6 +149,7 @@ public class PlatformController
     public String acessar( @PathVariable Long cdPlatform )
     {
         Platform platform = service.acessar( cdPlatform );
+
         return "redirect:" + platform.getDsUrl();
     }
 }
