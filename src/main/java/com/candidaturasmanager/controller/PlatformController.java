@@ -1,5 +1,6 @@
 package com.candidaturasmanager.controller;
 
+import com.candidaturasmanager.dto.PlatformImportResult;
 import com.candidaturasmanager.dto.PlatformRequest;
 import com.candidaturasmanager.entity.Platform;
 import com.candidaturasmanager.exception.PlatformValidationException;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -40,6 +43,34 @@ public class PlatformController
         model.addAttribute( "modoEdicao", false );
 
         return "form";
+    }
+
+    @GetMapping( "/importar" )
+    public String importar()
+    {
+        return "importar";
+    }
+
+    @PostMapping( "/importar" )
+    public String importar(
+        @RequestParam( "arquivo" ) MultipartFile arquivo,
+        RedirectAttributes redirectAttributes )
+    {
+        PlatformImportResult result = service.importarCsv( arquivo );
+
+        if ( result.possuiErros() )
+        {
+            redirectAttributes.addFlashAttribute( "errosImportacao", result.getErros() );
+
+            return "redirect:/importar";
+        }
+
+        redirectAttributes.addFlashAttribute(
+            "sucesso",
+            result.getQuantidadeImportada() + " plataforma(s) importada(s) com sucesso."
+        );
+
+        return "redirect:/";
     }
 
     @GetMapping( "/visualizar/{cdPlatform}" )
