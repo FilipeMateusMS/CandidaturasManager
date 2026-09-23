@@ -1,0 +1,110 @@
+package com.candidaturasmanager.controller;
+
+import com.candidaturasmanager.dto.PlatformRequest;
+import com.candidaturasmanager.entity.Platform;
+import com.candidaturasmanager.service.PlatformService;
+import jakarta.validation.Valid;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+@Controller
+public class PlatformController
+{
+    private final PlatformService service;
+
+    public PlatformController( PlatformService service )
+    {
+        this.service = service;
+    }
+
+    @GetMapping( "/" )
+    public String index( Model model )
+    {
+        model.addAttribute( "plataformas", service.listarAtivas() );
+        model.addAttribute( "inativas", service.listarInativas() );
+        return "index";
+    }
+
+    @GetMapping( "/novo" )
+    public String novo( Model model )
+    {
+        model.addAttribute( "platformRequest", new PlatformRequest() );
+        model.addAttribute( "modoEdicao", false );
+        return "form";
+    }
+
+    @PostMapping( "/salvar" )
+    public String salvar(
+        @Valid @ModelAttribute( "platformRequest" ) PlatformRequest request,
+        BindingResult bindingResult,
+        RedirectAttributes redirectAttributes,
+        Model model )
+    {
+        if ( bindingResult.hasErrors() )
+        {
+            model.addAttribute( "modoEdicao", false );
+            return "form";
+        }
+
+        service.salvar( request );
+        redirectAttributes.addFlashAttribute( "sucesso", "Plataforma cadastrada com sucesso." );
+
+        return "redirect:/";
+    }
+
+    @GetMapping( "/editar/{cdPlatform}" )
+    public String editar( @PathVariable Long cdPlatform, Model model )
+    {
+        Platform platform = service.buscarPorId( cdPlatform );
+        PlatformRequest request = new PlatformRequest();
+
+        request.setNmPlatform( platform.getNmPlatform() );
+        request.setDsPlatform( platform.getDsPlatform() );
+        request.setDsUrl( platform.getDsUrl() );
+
+        model.addAttribute( "platformRequest", request );
+        model.addAttribute( "cdPlatform", cdPlatform );
+        model.addAttribute( "modoEdicao", true );
+
+        return "form";
+    }
+
+    @PostMapping( "/editar/{cdPlatform}" )
+    public String editar(
+        @PathVariable Long cdPlatform,
+        @Valid @ModelAttribute( "platformRequest" ) PlatformRequest request,
+        BindingResult bindingResult,
+        RedirectAttributes redirectAttributes,
+        Model model )
+    {
+        if ( bindingResult.hasErrors() )
+        {
+            model.addAttribute( "modoEdicao", true );
+            model.addAttribute( "cdPlatform", cdPlatform );
+            return "form";
+        }
+
+        service.editar( cdPlatform, request );
+        redirectAttributes.addFlashAttribute( "sucesso", "Plataforma atualizada com sucesso." );
+
+        return "redirect:/";
+    }
+
+    @PostMapping( "/toggle/{cdPlatform}" )
+    public String alternarStatus( @PathVariable Long cdPlatform, RedirectAttributes redirectAttributes )
+    {
+        service.alternarStatus( cdPlatform );
+        redirectAttributes.addFlashAttribute( "sucesso", "Status da plataforma atualizado com sucesso." );
+        return "redirect:/";
+    }
+
+    @PostMapping( "/acessar/{cdPlatform}" )
+    public String acessar( @PathVariable Long cdPlatform )
+    {
+        Platform platform = service.acessar( cdPlatform );
+        return "redirect:" + platform.getDsUrl();
+    }
+}
