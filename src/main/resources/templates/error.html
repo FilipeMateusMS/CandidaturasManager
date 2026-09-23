@@ -1,3 +1,33 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"><head th:replace="~{fragments/head :: head('Erro')}"></head><body><div th:replace="~{fragments/navbar :: navbar}"></div>
-<main class="container py-5"><div class="row justify-content-center"><div class="col-lg-6"><div class="card border-0 shadow-sm text-center"><div class="card-body p-5"><i class="bi bi-exclamation-triangle display-4 text-warning"></i><h1 class="h4 mt-3">Não foi possível concluir a operação</h1><p class="text-secondary" th:text="${mensagem}"></p><a class="btn btn-success" th:href="${/}">Voltar para o início</a></div></div></div></div></main></body></html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head('Erro')}"></head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body p-5">
+                    <i class="bi bi-exclamation-triangle display-4 text-warning"></i>
+
+                    <h1 class="h4 mt-3">
+                        Não foi possível concluir a operação
+                    </h1>
+
+                    <p class="text-secondary" th:text="${mensagem}"></p>
+
+                    <a class="btn btn-success" th:href="@{/}">
+                        Voltar para o início
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>
