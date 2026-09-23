@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Importar plataformas')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Importar plataformas</h1>
+            <p class="text-secondary mb-0">Cadastre várias plataformas de uma vez usando um arquivo CSV.</p>
+        </div>
+
+        <a class="btn btn-outline-secondary" th:href="@{/}">Voltar</a>
+    </div>
+
+    <div th:if="${errosImportacao}" class="alert alert-danger" role="alert">
+        <h2 class="h6">Não foi possível importar o arquivo</h2>
+        <ul class="mb-0">
+            <li th:each="erro : ${errosImportacao}" th:text="${erro}"></li>
+        </ul>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-3">Arquivo CSV</h2>
+
+                    <form th:action="@{/importar}" method="post" enctype="multipart/form-data">
+                        <div class="mb-4">
+                            <label for="arquivo" class="form-label">Selecione o arquivo</label>
+                            <input id="arquivo"
+                                   name="arquivo"
+                                   type="file"
+                                   class="form-control"
+                                   accept=".csv,text/csv"
+                                   required>
+                            <div class="form-text">
+                                O arquivo deve conter as colunas nome, descricao e url.
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success">
+                            Importar CSV
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-3">Formato esperado</h2>
+
+                    <p class="text-secondary">
+                        A primeira linha deve conter os nomes das colunas.
+                        O sistema aceita CSV separado por vírgula ou ponto e vírgula.
+                    </p>
+
+                    <pre class="csv-example mb-0"><code>nome,descricao,url
+LinkedIn,Portal de vagas,https://www.linkedin.com/jobs/
+Gupy,Plataforma de recrutamento,https://portal.gupy.io/
+Indeed,Portal de empregos,https://br.indeed.com/</code></pre>
+
+                    <hr>
+
+                    <ul class="small text-secondary mb-0">
+                        <li>Nome: obrigatório, até 100 caracteres.</li>
+                        <li>Descrição: opcional, até 500 caracteres.</li>
+                        <li>URL: obrigatória, até 1000 caracteres.</li>
+                        <li>Não são permitidos nomes ou URLs duplicados.</li>
+                        <li>Se houver erro, nenhuma linha do arquivo será importada.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
