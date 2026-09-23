@@ -306,7 +306,7 @@ public class PlatformService
             if ( nomeDuplicado )
             {
                 result.getErros().add(
-                    "A plataforma "" + platform.getNmPlatform() + "" já está cadastrada."
+                    "A plataforma \"" + platform.getNmPlatform() + "\" já está cadastrada."
                 );
                 continue;
             }
@@ -320,7 +320,7 @@ public class PlatformService
             if ( urlDuplicada )
             {
                 result.getErros().add(
-                    "A URL da plataforma "" + platform.getNmPlatform() + "" já está cadastrada."
+                    "A URL da plataforma \"" + platform.getNmPlatform() + "\" já está cadastrada."
                 );
             }
         }
