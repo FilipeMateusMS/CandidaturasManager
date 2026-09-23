@@ -18,6 +18,9 @@ import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -120,6 +123,43 @@ public class PlatformService
         platform.setDtUltimoAcesso( LocalDateTime.now() );
 
         return repository.saveAndFlush( platform );
+    }
+
+    @Transactional(readOnly = true)
+    public byte[] exportarCsv()
+    {
+        CSVFormat formato = CSVFormat.DEFAULT.builder()
+            .setHeader( "nome", "descricao", "url" )
+            .build();
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        try ( PrintWriter writer = new PrintWriter(
+            new OutputStreamWriter( outputStream, StandardCharsets.UTF_8 ) );
+             var printer = formato.print( writer ) )
+        {
+            for ( Platform platform : repository.findAll() )
+            {
+                printer.printRecord(
+                    platform.getNmPlatform(),
+                    platform.getDsPlatform() == null ? "" : platform.getDsPlatform(),
+                    platform.getDsUrl()
+                );
+            }
+        }
+        catch ( IOException exception )
+        {
+            throw new IllegalStateException( "Não foi possível gerar o arquivo CSV.", exception );
+        }
+
+        byte[] conteudo = outputStream.toByteArray();
+        byte[] bom = new byte[] { (byte) 0xEF, (byte) 0xBB, (byte) 0xBF };
+        byte[] arquivo = new byte[bom.length + conteudo.length];
+
+        System.arraycopy( bom, 0, arquivo, 0, bom.length );
+        System.arraycopy( conteudo, 0, arquivo, bom.length, conteudo.length );
+
+        return arquivo;
     }
 
     @Transactional
