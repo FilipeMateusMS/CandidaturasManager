@@ -42,6 +42,14 @@ public class PlatformController
         return "form";
     }
 
+    @GetMapping( "/visualizar/{cdPlatform}" )
+    public String visualizar( @PathVariable Long cdPlatform, Model model )
+    {
+        model.addAttribute( "plataforma", service.buscarPorId( cdPlatform ) );
+
+        return "visualizar";
+    }
+
     @PostMapping( "/salvar" )
     public String salvar(
         @Valid @ModelAttribute( "platformRequest" ) PlatformRequest request,
@@ -146,10 +154,11 @@ public class PlatformController
     }
 
     @PostMapping( "/acessar/{cdPlatform}" )
-    public String acessar( @PathVariable Long cdPlatform )
+    public String acessar( @PathVariable Long cdPlatform, Model model )
     {
         Platform platform = service.acessar( cdPlatform );
+        model.addAttribute( "url", platform.getDsUrl() );
 
-        return "redirect:" + platform.getDsUrl();
+        return "access-redirect";
     }
 }
